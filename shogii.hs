@@ -2,6 +2,7 @@
 --Gote ABAJO
 import Data.Maybe
 
+
 data ShogiPlayer = Sente | Gote deriving (Eq, Show, Enum) 
 
 data Coordenada = Coordenada Int Int deriving (Eq, Show) 
