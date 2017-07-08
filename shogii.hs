@@ -1,3 +1,4 @@
+module Shogii where
 --Sente ARRIBA
 --Gote ABAJO
 import Data.Maybe
@@ -6,9 +7,10 @@ data ShogiPlayer = Sente | Gote deriving (Eq, Show, Enum)
 
 data Coordenada = Coordenada Int Int deriving (Eq, Show) 
 
-data Pieza = Rey | Alfil | Torre | GeneralPlateado | GeneralDorado | Peon | Lancero | Caballo | Alfil2 | Torre2 | GeneralPlateado2 | Peon2 | Lancero2 | Caballo2 deriving (Eq, Show, Enum) 
+data Pieza = Rey | Alfil | Torre | GeneralPlateado | GeneralDorado | Peon | Lancero | Caballo | Alfil2 | Torre2 | GeneralPlateado2 | Peon2 | Lancero2 | Caballo2 deriving (Eq, Enum, Show) 
 
-data ShogiAction = Movimiento Coordenada Coordenada Bool | Arrojar Pieza Coordenada deriving (Eq, Show) 
+data ShogiAction = Movimiento Coordenada Coordenada Bool | Arrojar Pieza Coordenada deriving (Eq, Show)
+--el bool es por si quiero promover 
 
 data ShogiGame = ShogiGame (Maybe ShogiPlayer) [(Pieza, Coordenada, ShogiPlayer)] deriving (Eq, Show) 
 
