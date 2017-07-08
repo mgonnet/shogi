@@ -1,5 +1,6 @@
 --Sente ARRIBA
 --Gote ABAJO
+import Data.Maybe
 
 data ShogiPlayer = Sente | Gote deriving (Eq, Show, Enum) 
 
@@ -9,10 +10,10 @@ data Pieza = Rey | Alfil | Torre | GeneralPlateado | GeneralDorado | Peon | Lanc
 
 data ShogiAction = Movimiento Coordenada Coordenada Bool | Arrojar Pieza Coordenada deriving (Eq, Show) 
 
-data ShogiGame = ShogiGame ShogiPlayer [(Pieza, Coordenada, ShogiPlayer)] deriving (Eq, Show) 
+data ShogiGame = ShogiGame (Maybe ShogiPlayer) [(Pieza, Coordenada, ShogiPlayer)] deriving (Eq, Show) 
 
 beginning :: ShogiGame
-beginning = ShogiGame Sente (peones++lanceros++caballos++generalesPlateados++generalesDorados++reyes++alfiles++torres)
+beginning = ShogiGame (Just Sente) (peones++lanceros++caballos++generalesPlateados++generalesDorados++reyes++alfiles++torres)
 
 peones :: [(Pieza,Coordenada,ShogiPlayer)]
 peones = [ (Peon, (Coordenada x 3), Sente) |  x <- [1..9]]++[ (Peon, (Coordenada x 7), Gote) |  x <- [1..9]]
