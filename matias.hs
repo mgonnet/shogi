@@ -19,12 +19,9 @@ showPieza Caballo2 = "C"
 showAction :: ShogiAction -> String
 showAction (Movimiento (Coordenada x1 x2) (Coordenada y1 y2) promover) = "Mover "++(show x1)++","++(show x2)++" "++(show y1)++","++(show y2)++" "++(show promover)
 showAction (Arrojar pieza (Coordenada x1 x2)) = "Arrojar "++(showPieza pieza)++" "++(show x1)++","++(show x2)
+
+
 --showBoard :: ShogiGame -> String
-
-
-
-
-
 
 
 
