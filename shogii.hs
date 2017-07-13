@@ -2,7 +2,6 @@
 --Gote ABAJO
 import Data.Maybe
 
-
 data ShogiPlayer = Sente | Gote deriving (Eq, Show, Enum) 
 
 data Coordenada = Coordenada Int Int deriving (Eq, Show) 
@@ -11,11 +10,11 @@ data Pieza = Rey | Alfil | Torre | GeneralPlateado | GeneralDorado | Peon | Lanc
 
 data ShogiAction = Movimiento Coordenada Coordenada Bool | Arrojar Pieza Coordenada deriving (Eq, Show) 
 
-data ShogiGame = ShogiGame (Maybe ShogiPlayer) [(Pieza, Coordenada, ShogiPlayer)] deriving (Eq, Show) 
+data ShogiGame = ShogiGame ShogiPlayer [(Pieza, Coordenada, ShogiPlayer)] deriving (Eq, Show) 
 
 beginning :: ShogiGame
-beginning = ShogiGame (Just Sente) (peones++lanceros++caballos++generalesPlateados++generalesDorados++reyes++alfiles++torres)
-
+beginning = ShogiGame Sente (peones++lanceros++caballos++generalesPlateados++generalesDorados++reyes++alfiles++torres)
+	
 peones :: [(Pieza,Coordenada,ShogiPlayer)]
 peones = [ (Peon, (Coordenada x 3), Sente) |  x <- [1..9]]++[ (Peon, (Coordenada x 7), Gote) |  x <- [1..9]]
 
@@ -39,3 +38,18 @@ alfiles = [(Alfil, (Coordenada 8 8), Gote), (Alfil, (Coordenada 2 2), Sente)]
 
 torres :: [(Pieza,Coordenada,ShogiPlayer)]
 torres = [(Torre, (Coordenada 2 8), Gote), (Torre, (Coordenada 8 2), Sente)]
+
+
+activePlayer :: ShogiGame -> Maybe ShogiPlayer
+activePlayer (ShogiGame player _)  = if isFinished then Nothing else Just player
+
+actions :: ShogiGame -> ShogiPlayer -> [ShogiAction]
+actions (ShogiGame player [(pieza, Coordenada (x y), jugador)]) 
+  |(pieza==Peon) && (jugador==Sente) = Movimiento(Coordenada(x y) Coordenada(x y+1)) 
+  |(pieza==Peon) && (jugador==Gote) = Movimiento(Coordenada(x y) Coordenada(x y-1)) 
+
+puedePromover :: ShogiAction -> Pieza -> ShogiPlayer -> Bool
+puedePromover _ Rey _ = False
+puedePromover _ GeneralDorado _ = False
+puedePromover (Movimiento (Coordenada x y) (Coordenada w z) a) pieza Sente = if y>=7 then True else False
+puedePromover (Movimiento (Coordenada x y) (Coordenada w z) a) pieza Gote = if y<=3 then True else False
