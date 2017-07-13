@@ -40,3 +40,15 @@ alfiles = [(Alfil, (Coordenada 8 8), Gote), (Alfil, (Coordenada 2 2), Sente)]
 
 torres :: [(Pieza,Coordenada,ShogiPlayer)]
 torres = [(Torre, (Coordenada 2 8), Gote), (Torre, (Coordenada 8 2), Sente)]
+
+-- Get Coordenada- -- - - --- - -
+getCoordenada :: Coordenada -> [(Pieza, Coordenada, ShogiPlayer)] -> Maybe (Pieza, Coordenada, ShogiPlayer)
+getCoordenada coord listaPiezas = ((\a -> if ((length a)==1) then (Just (head a)) else Nothing) (filter (\(pieza,coordFicha,player) -> if (coord==coordFicha) then True else False) listaPiezas))
+
+getCoordenadaCaso1 = (getCoordenada (Coordenada 1 1) [(Peon, (Coordenada 1 1), Sente)])==(Just (Peon, (Coordenada 1 1), Sente))
+getCoordenadaCaso2 = (getCoordenada (Coordenada 1 1) [(Peon, (Coordenada 1 2), Sente)])==Nothing
+
+casosGetCoordenada = getCoordenadaCaso1:getCoordenadaCaso2:[]
+
+todoBienGetCoordenada = and casosGetCoordenada
+----------------------
