@@ -1,6 +1,20 @@
 import Data.Maybe
 import Shogii
 
+isFinished :: ShogiGame -> Bool
+isFinished (ShogiGame _ a) = (length (filter (\(x,y,z) -> ((x==Rey)&&(y==(Coordenada 0 0))) ) a))==1
+
+caso1 = (isFinished (ShogiGame (Just Sente) [(Rey, (Coordenada 3 2), Sente), (Rey, (Coordenada 3 3), Gote)]))==False
+--Tengo dos reyes
+caso2 = (isFinished (ShogiGame (Just Sente) [(Rey, (Coordenada 3 2), Sente), (Rey, (Coordenada 3 3), Gote), (Caballo, (Coordenada 3 3), Gote)]))==False
+--Tengo dos reyes y un caballo
+caso3 = (isFinished (ShogiGame (Just Sente) [(Rey, (Coordenada 3 2), Sente), (Rey, (Coordenada 0 0), Sente), (Caballo, (Coordenada 3 3), Gote)]))==True
+--Tengo un rey y un caballo
+caso4 = (isFinished (ShogiGame (Just Sente) [(Rey, (Coordenada 3 2), Sente), (Rey, (Coordenada 0 0), Sente)]))==True
+--Tengo solo un rey
+
+casosIsFinished = caso1:caso2:caso3:caso4:[]
+
 
 activePlayer :: ShogiGame -> Maybe ShogiPlayer
 activePlayer (ShogiGame a _) = a 
@@ -11,7 +25,9 @@ activePlayer (ShogiGame a _) = a
 nextState:: ShogiGame -> ShogiPlayer -> ShogiAction -> ShogiGame
 nextState (ShogiGame Nothing _) _ _ = error "el juego esta terminado"
 --nextState a b c = if (isFinished a) then error "El juego esta terminado" else (nextStateValido a b c)
-nextState x@(ShogiGame (Just a) _) y z =  if (a/=y) then error "El jugador no esta activo" else (nextStateValido x y z)
+nextState x@(ShogiGame (Just a) _) y z =  if (a/=y) then error "El jugador no esta activo" else (if (isFinished x) then error "el juego esta terminado" else (nextStateValido x y z))
+
+
 
 
 nextStateValido:: ShogiGame -> ShogiPlayer -> ShogiAction -> ShogiGame
@@ -53,6 +69,6 @@ casoMoverYComer = (nextState (ShogiGame (Just Sente)  [(Rey, (Coordenada 3 2), S
 casoMoverYComerYPromover = (nextState (ShogiGame (Just Sente)  [(Rey, (Coordenada 3 2), Sente), (Rey, (Coordenada 5 4), Gote), (Caballo, (Coordenada 1 1), Sente), (Caballo, (Coordenada 1 3), Gote) ]) (Sente) (Movimiento (Coordenada 1 1) (Coordenada 1 3) True))==(ShogiGame (Just Gote)  [(Rey, (Coordenada 3 2), Sente), (Rey, (Coordenada 5 4), Gote), (Caballo2, (Coordenada 1 3), Sente), (Caballo, (Coordenada 0 0), Sente)])
 
 
-casos = casoArrojar:casoMoverSinComer:casoMoverYComer:casoMoverYComerYPromover:casoMoverSinComerYPromuevo:[]
+casosNextState = casoArrojar:casoMoverSinComer:casoMoverYComer:casoMoverYComerYPromover:casoMoverSinComerYPromuevo:[]
 
-todoBien = and casos
+todoBien = and (casosNextState++casosIsFinished)
