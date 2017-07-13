@@ -18,14 +18,7 @@ showPieza Caballo2 = "C"
 
 showAction :: ShogiAction -> String
 showAction (Movimiento (Coordenada x1 x2) (Coordenada y1 y2) promover) = "Mover "++(show x1)++","++(show x2)++" "++(show y1)++","++(show y2)++" "++(show promover)
-showAction (Arrojar pieza (Coordenada x1 x2)) = "Arrojar "++(showPieza pieza)++" "++(show x1)++","++(show x2)
-
-
---showBoard :: ShogiGame -> String
-
-
-
-
+showAction (Arrojar pieza (Coordenada x1 x2)) = "Arrojar "++(showPieza pieza)++" "++(show x1)++","++(show x2
 
 caso1 = (showAction (Arrojar Rey (Coordenada 3 2))=="Arrojar R 3,2")
 caso2 = (showAction (Movimiento (Coordenada 3 2) (Coordenada 3 3) True))=="Mover 3,2 3,3 True"
@@ -33,3 +26,22 @@ caso2 = (showAction (Movimiento (Coordenada 3 2) (Coordenada 3 3) True))=="Mover
 casos = caso1:caso2:[]
 
 todoBien = and casos
+
+-----------------------------
+
+showBoard :: ShogiGame -> String
+showBoard (ShogiGame _ listaFichas) = foldl1 (\a b -> a++b) [(if y==0 then "\n" else (showPiezaPosicionada (getCoordenada (Coordenada x y) listaFichas))) | x <- [1..9], y <- [9,8,7,6,5,4,3,2,1,0] ]
+
+showPlayer :: ShogiPlayer -> String
+showPlayer Sente = "S"
+showPlayer Gote = "G"
+
+showPiezaPosicionada :: Maybe (Pieza, Coordenada, ShogiPlayer) -> String
+showPiezaPosicionada Nothing = " *##* "
+showPiezaPosicionada (Just (a,b,c)) = " *"++(showPieza a)++(showPlayer c)++"* "
+
+showPiezaPosicionadaCaso1 = (showPiezaPosicionada (Just (Peon, (Coordenada 1 1), Sente)))==" *pS* "
+
+casosShowPiezaPosicionada = showPiezaPosicionadaCaso1:[]
+
+todoBienShowPiezaPosicionada = and casosShowPiezaPosicionada
