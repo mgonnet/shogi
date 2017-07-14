@@ -57,6 +57,11 @@ probarShowBoard1 = showBoard (ShogiGame (Just Sente) [(Peon, (Coordenada 2 3), S
 
 -------------------ACTIONS
 
+actions:: ShogiGame -> ShogiPlayer -> [ShogiAction]
+actions game@(ShogiGame (Just activo) listaFichas) player
+  | activo == player = foldl1 (++) [(if duenio==player then (actionsDeUnaPieza ficha game) else []) | ficha@(pieza,coord,duenio) <- listaFichas]
+  | otherwise = []
+
 actionsDeUnaPieza :: (Pieza,Coordenada,ShogiPlayer) -> ShogiGame -> [ShogiAction]
 actionsDeUnaPieza tripleta@(pieza,coordenada,player) game@(ShogiGame jugador listaFichas) = shogiActionsSinPromover ++ shogiActionsPromovidas
   where shogiActionsPromovidas = (map (\(Movimiento posA posB promover) -> (Movimiento posA posB True)) shogiActionsPromovibles)
