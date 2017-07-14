@@ -1,5 +1,6 @@
 import Shogii
 import MovimientosPiezas
+import NextState
 
 showPieza :: Pieza -> String
 showPieza Rey = "R"
@@ -21,12 +22,12 @@ showAction :: ShogiAction -> String
 showAction (Movimiento (Coordenada x1 x2) (Coordenada y1 y2) promover) = "Mover "++(show x1)++","++(show x2)++" "++(show y1)++","++(show y2)++" "++(show promover)
 showAction (Arrojar pieza (Coordenada x1 x2)) = "Arrojar "++(showPieza pieza)++" "++(show x1)++","++(show x2)
 
-caso1 = (showAction (Arrojar Rey (Coordenada 3 2))=="Arrojar R 3,2")
-caso2 = (showAction (Movimiento (Coordenada 3 2) (Coordenada 3 3) True))=="Mover 3,2 3,3 True"
+caso1showAction = (showAction (Arrojar Rey (Coordenada 3 2))=="Arrojar R 3,2")
+caso2showAction = (showAction (Movimiento (Coordenada 3 2) (Coordenada 3 3) True))=="Mover 3,2 3,3 True"
 
-casos = caso1:caso2:[]
+casosshowAction = caso1showAction:caso2showAction:[]
 
-todoBien = and casos
+todoBienshowAction = and casosshowAction
 
 -----------------------------
 
@@ -58,7 +59,7 @@ probarShowBoard1 = showBoard (ShogiGame (Just Sente) [(Peon, (Coordenada 2 3), S
 
 actionsDeUnaPieza :: (Pieza,Coordenada,ShogiPlayer) -> ShogiGame -> [ShogiAction]
 actionsDeUnaPieza tripleta@(pieza,coordenada,player) game@(ShogiGame jugador listaFichas) = shogiActionsSinPromover ++ shogiActionsPromovidas
-  where shogiActionsPromovidas = (map (\(Movimiento posA posB promover) -> (Movimiento posA posB (not promover))) shogiActionsPromovibles)
+  where shogiActionsPromovidas = (map (\(Movimiento posA posB promover) -> (Movimiento posA posB True)) shogiActionsPromovibles)
         shogiActionsPromovibles = (filter (\action -> (puedePromover action pieza player)) shogiActionsSinPromover)
         shogiActionsSinPromover = map (\coord -> (Movimiento coordenada coord False)) coordenadasFiltradas
         coordenadasFiltradas = foldl1 (++) coordenasPorDireccionFiltradas
@@ -69,8 +70,10 @@ caso2actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (Sho
 caso3actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 2), Sente)]))== []
 caso4actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 2), Gote)]))== [(Movimiento (Coordenada 1 1) (Coordenada 1 2) False)]
 caso5actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 7), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 7), Sente)])) == [(Movimiento (Coordenada 1 7) (Coordenada 1 8) False), (Movimiento (Coordenada 1 7) (Coordenada 1 8) True)]
+caso6actionsDeUnaPieza = (actionsDeUnaPieza (Lancero, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Lancero, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 4), Sente)])) == [(Movimiento (Coordenada 1 1) (Coordenada 1 2) False), (Movimiento (Coordenada 1 1) (Coordenada 1 3) False)]
+caso7actionsDeUnaPieza = (actionsDeUnaPieza (Lancero, (Coordenada 1 5), Sente) (ShogiGame (Just Sente) [(Lancero, (Coordenada 1 5), Sente),(Peon, (Coordenada 1 8), Sente)])) == [(Movimiento (Coordenada 1 5) (Coordenada 1 6) False), (Movimiento (Coordenada 1 5) (Coordenada 1 7) False), (Movimiento (Coordenada 1 5) (Coordenada 1 7) True)]
 
-casosactionsDeUnaPieza = caso1actionsDeUnaPieza:caso2actionsDeUnaPieza:caso3actionsDeUnaPieza:caso4actionsDeUnaPieza:caso5actionsDeUnaPieza:[]
+casosactionsDeUnaPieza = caso1actionsDeUnaPieza:caso2actionsDeUnaPieza:caso3actionsDeUnaPieza:caso4actionsDeUnaPieza:caso5actionsDeUnaPieza:caso6actionsDeUnaPieza:caso7actionsDeUnaPieza:[]
 
 todoBienactionsDeUnaPieza = and casosactionsDeUnaPieza
 
@@ -91,7 +94,8 @@ casosfiltrarRecorridoEnUnaDireccion = caso1filtrarRecorridoEnUnaDireccion:caso2f
 todoBienfiltrarRecorridoEnUnaDireccion = and casosfiltrarRecorridoEnUnaDireccion
 
 obtenerFuncionMovimientoDePieza :: Pieza -> ((Pieza,Coordenada,ShogiPlayer) -> [[Coordenada]])
-obtenerFuncionMovimientoDePieza Peon = movimientosPosiblesPeon 
+obtenerFuncionMovimientoDePieza Peon = movimientosPosiblesPeon
+obtenerFuncionMovimientoDePieza Lancero = movimientosPosiblesLancero
 
 
 

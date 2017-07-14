@@ -1,9 +1,10 @@
+module NextState where
 import Data.Maybe
 import Data.List.Split
 import Shogii
 
 isFinished :: ShogiGame -> Bool
-isFinished (ShogiGame _ a) = (length (filter (\(x,y,z) -> ((x==Rey)&&(y==(Coordenada 0 0))) ) a))==1
+isFinished (ShogiGame _ a) = (length (filter (\(x,y,z) -> ((x==Rey)&&(y/=(Coordenada 0 0))) ) a))==1
 
 caso1 = (isFinished (ShogiGame (Just Sente) [(Rey, (Coordenada 3 2), Sente), (Rey, (Coordenada 3 3), Gote)]))==False
 --Tengo dos reyes
@@ -16,6 +17,8 @@ caso4 = (isFinished (ShogiGame (Just Sente) [(Rey, (Coordenada 3 2), Sente), (Re
 
 casosIsFinished = caso1:caso2:caso3:caso4:[]
 
+todoBienIsFinishe = and casosIsFinished
+
 
 activePlayer :: ShogiGame -> Maybe ShogiPlayer
 activePlayer (ShogiGame a _) = a 
@@ -24,8 +27,6 @@ activePlayer (ShogiGame a _) = a
 
 
 nextState:: ShogiGame -> ShogiPlayer -> ShogiAction -> ShogiGame
---nextState (ShogiGame Nothing _) _ _ = error "el juego esta terminado"
---nextState a b c = if (isFinished a) then error "El juego esta terminado" else (nextStateValido a b c)
 nextState x@(ShogiGame (Just a) _) y z =  if (a/=y) then error "El jugador no esta activo" else (if (isFinished x) then error "el juego esta terminado" else (nextStateValido x y z))
 
 
@@ -55,7 +56,7 @@ cambioJugadorActivo Nothing = Nothing
 
 ------- Test Cases -------
 casoJugadorNoValido = (nextState (ShogiGame (Just Sente) []) (Gote) (Movimiento (Coordenada 2 3) (Coordenada 4 5) True))
-casoJuegoTeminado = (nextState (ShogiGame Nothing [(Rey, (Coordenada 3 2), Sente)]) (Sente) (Movimiento (Coordenada 2 3) (Coordenada 4 5) True))
+casoJuegoTeminado = (nextState (ShogiGame (Just Sente) [(Rey, (Coordenada 3 2), Sente)]) (Sente) (Movimiento (Coordenada 2 3) (Coordenada 4 5) True))
 
 casoArrojar = (nextState (ShogiGame (Just Sente)  [(Rey, (Coordenada 3 2), Sente), (Rey, (Coordenada 5 4), Sente), (Caballo, (Coordenada 0 0), Sente)]) (Sente) (Arrojar Caballo (Coordenada 5 2)))==ShogiGame (Just Gote) [(Rey,Coordenada 3 2,Sente),(Rey,Coordenada 5 4,Sente),(Caballo,Coordenada 5 2,Sente)]
 
