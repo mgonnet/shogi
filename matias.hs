@@ -56,13 +56,15 @@ probarShowBoard1 = showBoard (ShogiGame (Just Sente) [(Peon, (Coordenada 2 3), S
 
 -------------------ACTIONS
 
-actionsDeUnaPieza :: (Pieza,Coordenada,ShogiPlayer) -> ShogiGame -> [[Coordenada]] -- [ShogiAction]
-actionsDeUnaPieza tripleta@(pieza,coordenada,player) game@(ShogiGame jugador listaFichas) = map (\coords -> (filtrarRecorridoEnUnaDireccion game coords)) ((obtenerFuncionMovimientoDePieza pieza) (tripleta))
+actionsDeUnaPieza :: (Pieza,Coordenada,ShogiPlayer) -> ShogiGame -> [ShogiAction]
+actionsDeUnaPieza tripleta@(pieza,coordenada,player) game@(ShogiGame jugador listaFichas) = map (\coord -> (Movimiento coordenada coord False)) coordenadasFiltradas
+  where coordenadasFiltradas = foldl1 (++) coordenasPorDireccionFiltradas
+        coordenasPorDireccionFiltradas = map (\coords -> (filtrarRecorridoEnUnaDireccion game coords)) ((obtenerFuncionMovimientoDePieza pieza) (tripleta))
 
-caso1actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente)])) == [[(Coordenada 1 2)]]
-caso2actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 3), Gote)]))== [[(Coordenada 1 2)]]
-caso3actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 2), Sente)]))== [[]]
-caso4actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 2), Gote)]))== [[(Coordenada 1 2)]]
+caso1actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente)])) == [(Movimiento (Coordenada 1 1) (Coordenada 1 2) False)]
+caso2actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 3), Gote)]))== [(Movimiento (Coordenada 1 1) (Coordenada 1 2) False)]
+caso3actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 2), Sente)]))== []
+caso4actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 2), Gote)]))== [(Movimiento (Coordenada 1 1) (Coordenada 1 2) False)]
 
 casosactionsDeUnaPieza = caso1actionsDeUnaPieza:caso2actionsDeUnaPieza:caso3actionsDeUnaPieza:caso4actionsDeUnaPieza:[]
 
