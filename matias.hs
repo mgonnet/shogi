@@ -55,6 +55,21 @@ probarShowBoard1 = showBoard (ShogiGame (Just Sente) [(Peon, (Coordenada 2 3), S
 
 -------------------ACTIONS
 
+actionsDeUnaPieza :: (Pieza,Coordenada,ShogiPlayer) -> ShogiGame -> [[Coordenada]] -- [ShogiAction]
+actionsDeUnaPieza tripleta@(pieza,coordenada,player) (ShogiGame jugador listaFichas) = ((obtenerFuncionMovimientoDePieza pieza) (tripleta))
+
+caso1actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente)])) == [[(Coordenada 1 2)]]
+
+casosactionsDeUnaPieza = caso1actionsDeUnaPieza:[]
+
+todoBienactionsDeUnaPieza = and casosactionsDeUnaPieza
+
+--filtrarRecorridoEnUnaDireccion:: ShogiGame -> [Coordenada] -> [Coordenada]
+
+
+obtenerFuncionMovimientoDePieza :: Pieza -> ((Pieza,Coordenada,ShogiPlayer) -> [[Coordenada]])
+obtenerFuncionMovimientoDePieza Peon = movimientosPosiblesPeon 
+
 movimientosPosiblesPeon :: (Pieza, Coordenada, ShogiPlayer) -> [[Coordenada]]
 movimientosPosiblesPeon (a, (Coordenada x y), Sente) = if y==9 then [[]] else [[(Coordenada x (y+1))]]
 movimientosPosiblesPeon (a, (Coordenada x y), Gote) = if y==1 then [[]] else [[(Coordenada x (y-1))]]
