@@ -57,16 +57,32 @@ probarShowBoard1 = showBoard (ShogiGame (Just Sente) [(Peon, (Coordenada 2 3), S
 -------------------ACTIONS
 
 actionsDeUnaPieza :: (Pieza,Coordenada,ShogiPlayer) -> ShogiGame -> [[Coordenada]] -- [ShogiAction]
-actionsDeUnaPieza tripleta@(pieza,coordenada,player) (ShogiGame jugador listaFichas) = ((obtenerFuncionMovimientoDePieza pieza) (tripleta))
+actionsDeUnaPieza tripleta@(pieza,coordenada,player) game@(ShogiGame jugador listaFichas) = map (\coords -> (filtrarRecorridoEnUnaDireccion game coords)) ((obtenerFuncionMovimientoDePieza pieza) (tripleta))
 
 caso1actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente)])) == [[(Coordenada 1 2)]]
+caso2actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 3), Gote)]))== [[(Coordenada 1 2)]]
+caso3actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 2), Sente)]))== [[]]
+caso4actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 2), Gote)]))== [[(Coordenada 1 2)]]
 
-casosactionsDeUnaPieza = caso1actionsDeUnaPieza:[]
+--casosactionsDeUnaPieza = caso1actionsDeUnaPieza:caso2actionsDeUnaPieza:caso3actionsDeUnaPieza:caso4actionsDeUnaPieza:[]
 
-todoBienactionsDeUnaPieza = and casosactionsDeUnaPieza
+--todoBienactionsDeUnaPieza = and casosactionsDeUnaPieza
 
---filtrarRecorridoEnUnaDireccion:: ShogiGame -> [Coordenada] -> [Coordenada]
+filtrarRecorridoEnUnaDireccion:: ShogiGame -> [Coordenada] -> [Coordenada]
+filtrarRecorridoEnUnaDireccion _ [] = []
+filtrarRecorridoEnUnaDireccion game@(ShogiGame (Just a) listaFichas) (coord1:xs) = if (length fichasOcupandoPosicion)==0 then (coord1:(filtrarRecorridoEnUnaDireccion game xs)) else (if (((\(t1,t2,t3) -> t3) (head fichasOcupandoPosicion))/=a) then coord1:[] else [])
+  where fichasOcupandoPosicion = (filter (\(x,y,z) -> (y==coord1) ) listaFichas)
 
+caso1filtrarRecorridoEnUnaDireccion = (filtrarRecorridoEnUnaDireccion (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente)]) [(Coordenada 1 2)])==[(Coordenada 1 2)]
+caso2filtrarRecorridoEnUnaDireccion = (filtrarRecorridoEnUnaDireccion (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente)]) [(Coordenada 1 2),(Coordenada 1 3),(Coordenada 1 4)])==[(Coordenada 1 2),(Coordenada 1 3),(Coordenada 1 4)]
+caso3filtrarRecorridoEnUnaDireccion = (filtrarRecorridoEnUnaDireccion (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 2), Sente)]) [(Coordenada 1 2)])==[]
+caso4filtrarRecorridoEnUnaDireccion = (filtrarRecorridoEnUnaDireccion (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 2), Gote)]) [(Coordenada 1 2)])==[(Coordenada 1 2)]
+caso5filtrarRecorridoEnUnaDireccion = (filtrarRecorridoEnUnaDireccion (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 3), Sente)]) [(Coordenada 1 2),(Coordenada 1 3),(Coordenada 1 4)])==[(Coordenada 1 2)]
+caso6filtrarRecorridoEnUnaDireccion = (filtrarRecorridoEnUnaDireccion (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 3), Gote)]) [(Coordenada 1 2),(Coordenada 1 3),(Coordenada 1 4)])==[(Coordenada 1 2),(Coordenada 1 3)]
+
+casosfiltrarRecorridoEnUnaDireccion = caso1filtrarRecorridoEnUnaDireccion:caso2filtrarRecorridoEnUnaDireccion:caso3filtrarRecorridoEnUnaDireccion:caso4filtrarRecorridoEnUnaDireccion:caso5filtrarRecorridoEnUnaDireccion:caso6filtrarRecorridoEnUnaDireccion:[]
+
+todoBienfiltrarRecorridoEnUnaDireccion = and casosfiltrarRecorridoEnUnaDireccion
 
 obtenerFuncionMovimientoDePieza :: Pieza -> ((Pieza,Coordenada,ShogiPlayer) -> [[Coordenada]])
 obtenerFuncionMovimientoDePieza Peon = movimientosPosiblesPeon 

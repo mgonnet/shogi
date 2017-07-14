@@ -1,4 +1,5 @@
 import Data.Maybe
+import Data.List.Split
 import Shogii
 
 isFinished :: ShogiGame -> Bool
@@ -23,7 +24,7 @@ activePlayer (ShogiGame a _) = a
 
 
 nextState:: ShogiGame -> ShogiPlayer -> ShogiAction -> ShogiGame
-nextState (ShogiGame Nothing _) _ _ = error "el juego esta terminado"
+--nextState (ShogiGame Nothing _) _ _ = error "el juego esta terminado"
 --nextState a b c = if (isFinished a) then error "El juego esta terminado" else (nextStateValido a b c)
 nextState x@(ShogiGame (Just a) _) y z =  if (a/=y) then error "El jugador no esta activo" else (if (isFinished x) then error "el juego esta terminado" else (nextStateValido x y z))
 
@@ -44,10 +45,6 @@ promoverPieza Peon True = Peon2
 promoverPieza Lancero True = Lancero2
 promoverPieza Caballo True = Caballo2
 promoverPieza a _ = a
-
-cambiarJugador:: ShogiPlayer -> ShogiPlayer
-cambiarJugador Sente = Gote
-cambiarJugador Gote = Sente
 
 cambioJugadorActivo:: Maybe ShogiPlayer-> Maybe ShogiPlayer
 cambioJugadorActivo (Just Sente) = (Just Gote) 
@@ -72,3 +69,38 @@ casoMoverYComerYPromover = (nextState (ShogiGame (Just Sente)  [(Rey, (Coordenad
 casosNextState = casoArrojar:casoMoverSinComer:casoMoverYComer:casoMoverYComerYPromover:casoMoverSinComerYPromuevo:[]
 
 todoBien = and (casosNextState++casosIsFinished)
+
+
+
+------------------
+
+readAction :: String -> ShogiAction
+readAction x
+  |length(x) == 22 = (Movimiento (auxStringCoord (take 3 (drop 6 x))) (auxStringCoord (take 3 (drop 6 x))) True)
+  |length(x) == 24 = (Movimiento (auxStringCoord (take 3 (drop 10 x))) (auxStringCoord (take 3 (drop 10 x))) False)
+  |length(x) == 13 = (Arrojar (auxStringPieza((drop 8 x)!!0)) (auxStringCoord(take 3(drop 10 x))))
+  |otherwise = error "Accion incorrecta"
+
+auxStringCoord :: String -> Coordenada
+auxStringCoord x
+  |((length x) == 3)&&((x!!1)==',') =  (Coordenada (read ((splitOn "," x)!!0)::Int) (read ((splitOn "," x)!!1)::Int))
+  |otherwise = error "String no valido"
+
+auxStringPieza :: Char -> Pieza
+auxStringPieza x
+  |x == 'p' = Peon
+  |x == 'r' = Rey
+  |x == 'g' = GeneralDorado
+  |x == 's' = GeneralPlateado
+  |x == 't' = Torre
+  |x == 'a' = Alfil
+  |x == 'l' = Lancero
+  |x == 'c' = Caballo
+  |otherwise = error "Caracter no valido"
+
+score :: ShogiGame -> ShogiPlayer -> Maybe Int
+score (ShogiGame (Just a) b) p
+  |((isFinished(ShogiGame (Just a) b)) && (a == p)) = Just 1
+  |((isFinished(ShogiGame (Just a) b)) && (a /= p)) = Just (-1)
+  |otherwise = Nothing
+score _ _ = Nothing

@@ -14,6 +14,10 @@ data ShogiAction = Movimiento Coordenada Coordenada Bool | Arrojar Pieza Coorden
 
 data ShogiGame = ShogiGame (Maybe ShogiPlayer) [(Pieza, Coordenada, ShogiPlayer)] deriving (Eq, Show) 
 
+cambiarJugador:: ShogiPlayer -> ShogiPlayer
+cambiarJugador Sente = Gote
+cambiarJugador Gote = Sente
+
 beginning :: ShogiGame
 beginning = ShogiGame (Just Sente) (peones++lanceros++caballos++generalesPlateados++generalesDorados++reyes++alfiles++torres)
 
