@@ -95,9 +95,13 @@ caso5actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 7), Sente) (Sho
 caso6actionsDeUnaPieza = (actionsDeUnaPieza (Lancero, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Lancero, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 4), Sente)])) == [(Movimiento (Coordenada 1 1) (Coordenada 1 2) False), (Movimiento (Coordenada 1 1) (Coordenada 1 3) False)]
 caso7actionsDeUnaPieza = (actionsDeUnaPieza (Lancero, (Coordenada 1 5), Sente) (ShogiGame (Just Sente) [(Lancero, (Coordenada 1 5), Sente),(Peon, (Coordenada 1 8), Sente)])) == [(Movimiento (Coordenada 1 5) (Coordenada 1 6) False), (Movimiento (Coordenada 1 5) (Coordenada 1 7) False), (Movimiento (Coordenada 1 5) (Coordenada 1 7) True)]
 caso8actionsDeUnaPieza = (actionsDeUnaPieza (Torre, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Torre, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 3), Sente),(Peon, (Coordenada 3 1), Sente)])) == [(Movimiento (Coordenada 1 1) (Coordenada 1 2) False),(Movimiento (Coordenada 1 1) (Coordenada 2 1) False)]
-caso9ActionsDeUnaPieza = (actionsDeUnaPieza (Torre, (Coordenada 8 2), Sente) beginning)
+caso9ActionsDeUnaPieza = (actionsDeUnaPieza (Torre, (Coordenada 8 2), Sente) beginning)==[Movimiento (Coordenada 8 2) (Coordenada 9 2) False,Movimiento (Coordenada 8 2) (Coordenada 7 2) False,Movimiento (Coordenada 8 2) (Coordenada 6 2) False,Movimiento (Coordenada 8 2) (Coordenada 5 2) False,Movimiento (Coordenada 8 2) (Coordenada 4 2) False,Movimiento (Coordenada 8 2) (Coordenada 3 2) False]
+caso10ActionsDeUnaPieza = (actionsDeUnaPieza (GeneralDorado, (Coordenada 4 1), Sente) beginning)==[Movimiento (Coordenada 4 1) (Coordenada 4 2) False,Movimiento (Coordenada 4 1) (Coordenada 5 2) False,Movimiento (Coordenada 4 1) (Coordenada 3 2) False]
+caso11ActionsDeUnaPieza = (actionsDeUnaPieza (Caballo, (Coordenada 2 1), Sente) beginning)==[]
+caso12ActionsDeUnaPieza = (actionsDeUnaPieza (Caballo, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Caballo, (Coordenada 1 1), Sente)]))==[(Movimiento (Coordenada 1 1) (Coordenada 2 3) False)]
+caso13ActionsDeUnaPieza = (actionsDeUnaPieza (Caballo, (Coordenada 3 1), Sente) (ShogiGame (Just Sente) [(Caballo, (Coordenada 3 1), Sente)]))==[(Movimiento (Coordenada 3 1) (Coordenada 4 3) False), (Movimiento (Coordenada 3 1) (Coordenada 2 3) False)]
 
-casosactionsDeUnaPieza = caso1actionsDeUnaPieza:caso2actionsDeUnaPieza:caso3actionsDeUnaPieza:caso4actionsDeUnaPieza:caso5actionsDeUnaPieza:caso6actionsDeUnaPieza:caso7actionsDeUnaPieza:caso8actionsDeUnaPieza:[]
+casosactionsDeUnaPieza = caso1actionsDeUnaPieza:caso2actionsDeUnaPieza:caso3actionsDeUnaPieza:caso4actionsDeUnaPieza:caso5actionsDeUnaPieza:caso6actionsDeUnaPieza:caso7actionsDeUnaPieza:caso8actionsDeUnaPieza:caso9ActionsDeUnaPieza:caso10ActionsDeUnaPieza:caso11ActionsDeUnaPieza:caso12ActionsDeUnaPieza:caso13ActionsDeUnaPieza:[]
 
 todoBienactionsDeUnaPieza = and casosactionsDeUnaPieza
 
@@ -121,6 +125,8 @@ obtenerFuncionMovimientoDePieza :: Pieza -> ((Pieza,Coordenada,ShogiPlayer) -> [
 obtenerFuncionMovimientoDePieza Peon = movimientosPosiblesPeon
 obtenerFuncionMovimientoDePieza Lancero = movimientosPosiblesLancero
 obtenerFuncionMovimientoDePieza Torre = movimientosPosiblesTorre
+obtenerFuncionMovimientoDePieza GeneralDorado = esMovimientoPosibleGeneralDorado
+obtenerFuncionMovimientoDePieza Caballo = esMovimientoPosibleCaballo
 
 
 
