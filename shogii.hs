@@ -40,16 +40,111 @@ torres :: [(Pieza,Coordenada,ShogiPlayer)]
 torres = [(Torre, (Coordenada 2 8), Gote), (Torre, (Coordenada 8 2), Sente)]
 
 
-activePlayer :: ShogiGame -> Maybe ShogiPlayer
-activePlayer (ShogiGame player _)  = if isFinished then Nothing else Just player
+--activePlayer :: ShogiGame -> Maybe ShogiPlayer
+--activePlayer (ShogiGame player _)  = if isFinished then Nothing else Just player
 
-actions :: ShogiGame -> ShogiPlayer -> [ShogiAction]
-actions (ShogiGame player [(pieza, Coordenada (x y), jugador)]) 
-  |(pieza==Peon) && (jugador==Sente) = Movimiento(Coordenada(x y) Coordenada(x y+1)) 
-  |(pieza==Peon) && (jugador==Gote) = Movimiento(Coordenada(x y) Coordenada(x y-1)) 
+----Movimientos-----
 
-puedePromover :: ShogiAction -> Pieza -> ShogiPlayer -> Bool
-puedePromover _ Rey _ = False
-puedePromover _ GeneralDorado _ = False
-puedePromover (Movimiento (Coordenada x y) (Coordenada w z) a) pieza Sente = if y>=7 then True else False
-puedePromover (Movimiento (Coordenada x y) (Coordenada w z) a) pieza Gote = if y<=3 then True else False
+esMovimientoPosibleGeneralDorado :: (Pieza, Coordenada, ShogiPlayer) -> [Coordenada]
+esMovimientoPosibleGeneralDorado (p, (Coordenada x y), player) 
+ |(player == Sente) && (y==9) && (x/=1) && (x/=9) = [(Coordenada (x+1) y)]++[(Coordenada (x-1) y)]++[(Coordenada x (y-1))]
+ |(player == Sente) && (y==9) && (x==1) = [(Coordenada (x+1) y)]++[(Coordenada x (y-1))]
+ |(player == Sente) && (y==9) && (x==9) = [(Coordenada (x-1) y)]++[(Coordenada x (y-1))]
+ |(player == Sente) && (y==1) && (x/=1) && (x/=9) = [(Coordenada x (y+1))]++[(Coordenada (x+1) (y+1))]++[(Coordenada (x-1) (y+1))]++[(Coordenada (x+1) y)]++[(Coordenada (x-1) y)]
+ |(player == Sente) && (y==1) && (x==1) = [(Coordenada x (y+1))]++[(Coordenada (x+1) (y+1))]++[(Coordenada (x+1) y)]
+ |(player == Sente) && (y==1) && (x==9) = [(Coordenada x (y+1))]++[(Coordenada (x-1) (y+1))]++[(Coordenada (x-1) y)]
+ |(player == Sente) && (x==9) && (y/=1) && (y/=9) = [(Coordenada x (y+1))]++[(Coordenada (x-1) (y+1))]++[(Coordenada (x-1) y)]++[(Coordenada x (y-1))]
+ |(player == Sente) && (x==1) && (y/=1) && (y/=9) = [(Coordenada x (y+1))]++[(Coordenada (x+1) (y+1))]++[(Coordenada (x+1) y)]++[(Coordenada (x+1) (y-1))]
+ |(player == Gote) && (y==9) && (x/=1) && (x/=9) = [(Coordenada x (y-1))]++[(Coordenada (x-1) (y-1))]++[(Coordenada x (y-1))]++[(Coordenada (x-1) y)]++[(Coordenada (x+1) y)]
+ |(player == Gote) && (y==9) && (x==1) = [(Coordenada x (y-1))]++[(Coordenada (x+1) (y-1))]++[(Coordenada (x+1) y)]
+ |(player == Gote) && (y==9) && (x==9) = [(Coordenada x (y-1))]++[(Coordenada (x-1) (y-1))]++[(Coordenada (x-1) y)]
+ |(player == Gote) && (y==1) && (x/=1) && (x/=9) = [(Coordenada (x-1) y)]++[(Coordenada (x+1) y)]++[(Coordenada x (y+1))]
+ |(player == Gote) && (y==1) && (x==1) = [(Coordenada x (y+1))]++[(Coordenada (x+1) y)]
+ |(player == Gote) && (y==1) && (x==9) = [(Coordenada (x-1) y)]++[(Coordenada x (y+1))]
+ |(player == Gote) && (x==9) && (y/=1) && (y/=9) = [(Coordenada x (y-1))]++[(Coordenada (x-1) (y-1))]++[(Coordenada (x-1) y)]++[(Coordenada x (y+1))]
+ |(player == Gote) && (x==1) && (y/=1) && (y/=9) = [(Coordenada x (y-1))]++[(Coordenada (x+1) (y-1))]++[(Coordenada (x+1) y)]++[(Coordenada x (y+1))]
+ |(player == Sente) && (x/=1) && (x/=9) && (y/=1) && (y/=9) = [(Coordenada (x+1) y)]++[(Coordenada (x-1) y)]++[(Coordenada (x+1) (y-1))]++[(Coordenada (x-1) (y-1))]++[(Coordenada (x+1) (y+1))]++[(Coordenada (x-1) (y+1))]++[(Coordenada x (y+1))]
+ |(player == Gote) && (x/=1) && (x/=9) && (y/=1) && (y/=9) = [(Coordenada (x+1) y)]++[(Coordenada (x-1) y)]++[(Coordenada (x+1) (y-1))]++[(Coordenada (x-1) (y-1))]++[(Coordenada (x+1) (y+1))]++[(Coordenada (x-1) (y+1))]++[(Coordenada x (y-1))]
+ |otherwise = []
+
+caso1esMovimientoPosibleGeneralDorado = (esMovimientoPosibleGeneralDorado (GeneralDorado, (Coordenada 5 5), Sente))==[(Coordenada 6 5), (Coordenada 4 5), (Coordenada 6 4), (Coordenada 4 4), (Coordenada 6 6), (Coordenada 4 6), (Coordenada 5 6)]
+caso2esMovimientoPosibleGeneralDorado = (esMovimientoPosibleGeneralDorado (GeneralDorado, (Coordenada 1 1), Sente)) == [(Coordenada 1 2), (Coordenada 2 2), (Coordenada 2 1)]
+
+casosesMovimientoPosibleGeneralDorado = caso1esMovimientoPosibleGeneralDorado:caso2esMovimientoPosibleGeneralDorado:[]
+
+todoBienesMovimientoPosibleGeneralDorado = and casosesMovimientoPosibleGeneralDorado
+
+esMovimientoPosibleCaballo :: (Pieza, Coordenada, ShogiPlayer) -> [Coordenada]
+esMovimientoPosibleCaballo (p, (Coordenada x y), player)
+ |(player == Sente) && (y<=7) && (x/=1) && (x/=9) = [(Coordenada (x+1) (y+2))]++[(Coordenada (x-1) (y+2))]
+ |(player == Sente) && (y<=7) && (x==1) = [(Coordenada (x+1) (y+2))]
+ |(player == Sente) && (y<=7) && (x==9) = [(Coordenada (x-1) (y+2))]
+ |(player == Gote) && (y>=3) && (x/=1) && (x/=9) = [(Coordenada (x+1) (y-2))]++[(Coordenada (x-1) (y-2))]
+ |(player == Gote) && (y>=3) && (x==1) = [(Coordenada (x+1) (y-2))]
+ |(player == Gote) && (y>=3) && (x==9) = [(Coordenada (x-1) (y-2))]
+ |otherwise = []
+
+caso1esMovimientoPosibleCaballo = (esMovimientoPosibleCaballo (Caballo, (Coordenada 5 5), Sente))==[(Coordenada 6 7), (Coordenada 4 7)]
+
+casosesMovimientoPosibleCaballo = caso1esMovimientoPosibleCaballo:[]
+
+todoBienesMovimientoPosibleCaballo = and casosesMovimientoPosibleCaballo
+
+
+esMovimientoPosibleRey :: (Pieza, Coordenada, ShogiPlayer) -> [Coordenada]
+esMovimientoPosibleRey (p, (Coordenada x y), player) 
+ |(y==9) && (x/=1) && (x/=9) = [(Coordenada x (y-1))]++[(Coordenada (x+1) (y-1))]++[(Coordenada (x-1) (y-1))]++[(Coordenada (x+1) y)]++[(Coordenada (x-1) y)]
+ |(y==9) && (x==1) = [(Coordenada x (y-1))]++[(Coordenada (x+1) (y-1))]++[(Coordenada (x+1) y)]
+ |(y==9) && (x==9) = [(Coordenada x (y-1))]++[(Coordenada (x-1) (y-1))]++[(Coordenada (x-1) y)]
+ |(y==1) && (x/=1) && (x/=9) = [(Coordenada (x+1) y)]++[(Coordenada (x+1) (y+1))]++[(Coordenada x (y+1))]++[(Coordenada (x-1) (y+1))]++[(Coordenada (x-1) y)]
+ |(y==1) && (x==1) = [(Coordenada (x+1) y)]++[(Coordenada (x+1) (y+1))]++[(Coordenada x (y+1))]
+ |(y==1) && (x==9) = [(Coordenada (x-1) y)]++[(Coordenada (x-1) (y+1))]++[(Coordenada x (y+1))]
+ |(x==9) && (y/=1) && (y/=9) = [(Coordenada x (y-1))]++[(Coordenada (x-1) (y-1))]++[(Coordenada (x-1) y)]++[(Coordenada (x-1) (y+1))]++[(Coordenada x (y+1))]
+ |(x==1) && (y/=1) && (y/=9) = [(Coordenada x (y-1))]++[(Coordenada (x+1) (y-1))]++[(Coordenada (x+1) y)]++[(Coordenada (x+1) (y+1))]++[(Coordenada x (y+1))]
+ |(x/=1) && (x/=9) && (y/=1) && (y/=9) = [(Coordenada x (y-1))]++[(Coordenada (x-1) (y-1))]++[(Coordenada (x-1) y)]++[(Coordenada (x-1) (y+1))]++[(Coordenada x (y+1))]++[(Coordenada (x+1) (y-1))]++[(Coordenada (x+1) y)]++[(Coordenada (x+1) (y+1))]
+ |otherwise = []
+
+caso1esMovimientoPosibleRey = (esMovimientoPosibleRey (Rey, (Coordenada 5 5), Sente))==[(Coordenada 5 4), (Coordenada 4 4), (Coordenada 4 5), (Coordenada 4 6), (Coordenada 5 6), (Coordenada 6 4), (Coordenada 6 5), (Coordenada 6 6)]
+
+casosesMovimientoPosibleRey = caso1esMovimientoPosibleRey:[]
+
+todoBienesMovimientoPosibleRey = and casosesMovimientoPosibleRey
+
+esMovimientoPosibleGeneralPlateado :: (Pieza, Coordenada, ShogiPlayer) -> [Coordenada]
+esMovimientoPosibleGeneralPlateado (p, (Coordenada x y), player)
+ |(player == Sente) && (y==9) && (x/=1) && (x/=9) = [(Coordenada (x-1) (y-1))]++[(Coordenada (x+1) (y-1))]
+ |(player == Sente) && (y==9) && (x==1) = [(Coordenada (x+1) (y-1))]
+ |(player == Sente) && (y==9) && (x==9) = [(Coordenada (x-1) (y-1))]
+ |(player == Sente) && (y==1) && (x/=1) && (x/=9) = [(Coordenada (x+1) (y+1))]++[(Coordenada x (y+1))]++[(Coordenada (x-1) (y+1))]
+ |(player == Sente) && (y==1) && (x==1) = [(Coordenada (x+1) (y+1))]++[(Coordenada x (y+1))]
+ |(player == Sente) && (y==1) && (x==9) = [(Coordenada x (y+1))]++[(Coordenada (x-1) (y+1))]
+ |(player == Sente) && (x==9) && (y/=1) && (y/=9) = [(Coordenada x (y+1))]++[(Coordenada (x-1) (y+1))]++[(Coordenada (x-1) (y-1))]
+ |(player == Sente) && (x==1) && (y/=1) && (y/=9) = [(Coordenada x (y+1))]++[(Coordenada (x+1) (y+1))]++[(Coordenada (x+1) (y-1))]
+ |(player == Gote) && (y==9) && (x/=1) && (x/=9) = [(Coordenada x (y-1))]++[(Coordenada (x-1) (y-1))]++[(Coordenada (x+1) (y-1))]
+ |(player == Gote) && (y==9) && (x==1) = [(Coordenada x (y-1))]++[(Coordenada (x+1) (y-1))]
+ |(player == Gote) && (y==9) && (x==9) = [(Coordenada x (y-1))]++[(Coordenada (x-1) (y-1))]
+ |(player == Gote) && (y==1) && (x/=1) && (x/=9) = [(Coordenada (x+1) (y+1))]++[(Coordenada (x-1) (y+1))]
+ |(player == Gote) && (y==1) && (x==1) = [(Coordenada (x+1) (y+1))]
+ |(player == Gote) && (y==1) && (x==9) = [(Coordenada (x-1) (y+1))]
+ |(player == Gote) && (x==9) && (y/=1) && (y/=9) = [(Coordenada x (y-1))]++[(Coordenada (x-1) (y-1))]++[(Coordenada (x-1) (y+1))]
+ |(player == Gote) && (x==1) && (y/=1) && (y/=9) = [(Coordenada x (y-1))]++[(Coordenada (x+1) (y-1))]++[(Coordenada (x+1) (y+1))]
+ |(x/=1) && (x/=9) && (y/=1) && (y/=9) = [(Coordenada (x+1) (y-1))]++[(Coordenada x (y-1))]++[(Coordenada (x-1) (y-1))]++[(Coordenada (x+1) (y+1))]++[(Coordenada (x-1) (y+1))]
+ |otherwise = []
+
+caso1esMovimientoPosibleGeneralPlateado = (esMovimientoPosibleGeneralPlateado (GeneralPlateado, (Coordenada 5 5), Sente)) == [(Coordenada 6 4), (Coordenada 5 4), (Coordenada 4 4), (Coordenada 6 6), (Coordenada 4 6)]
+
+casosesMovimientoPosibleGeneralPlateado = caso1esMovimientoPosibleGeneralPlateado:[]
+
+todoBienesMovimientoPosibleGeneralPlateado = and casosesMovimientoPosibleGeneralPlateado
+
+esMovimientoPosibleAlfil :: (Pieza, Coordenada, ShogiPlayer) -> [Coordenada]
+esMovimientoPosibleAlfil (Alfil, (a,b), player) = filter (\(p,(x,y)) -> x>0 && x<10 && y>0 && y<10 && (x,y)/=(a,b)) [(Alfil, (a+x, b+x), player | x<-[-8..8]]
+
+esMovimientoPosibleAlfil2 :: (Pieza, Coordenada, ShogiPlayer) -> [Coordenada]
+esMovimientoPosibleAlfil2 (Alfil2, (a,b), player) = filter (\(p,(x,y)) -> x>0 && x<10 && y>0 && y<10 && (x,y)/=(a,b)) ([(Alfil2, (a+x,b+x), player) | x<-[-8..8]]++[(Alfil2, (a+1,b), player),(Alfil2, (a,b-1), player),(Alfil2 ,(a,b+1), player),(Alfil2 ,(a-1,b), player)])
+
+esMovimientoPosibleTorre :: (Pieza, Coordenada, ShogiPlayer) -> [Coordenada]
+esMovimientoPosibleTorre (Torre, (a,b), player) = filter (\(p,(x,y)) -> x>0 && x<10 && y>0 && y<10 && (x,y)/=(a,b)) ([(Torre ,(a+x,b), player) | x<-[-8..8]]++[(Torre ,(a,b+x), player) | x<-[-8..8]]) 
+
+esMovimientoPosibleTorre2 :: (Pieza, Coordenada, ShogiPlayer) -> [Coordenada]
+esMovimientoPosibleTorre2 = (Torre2, (a,b), player) = filter (\(p,(x,y)) -> x>0 && x<10 && y>0 && y<10 && (x,y)/=(a,b)) (([(Torre2 ,(a+x,b), player) | x<-[-8..8]]++[(Torre2 ,(a,b+x), player) | x<-[-8..8]])++[(Torre2 ,(a+1,b+1), player),(Torre2 ,(a-1,b+1), player),(Torre2 ,(a-1,b-1), player),(Torre2 ,(a+1,b-1), player)])
