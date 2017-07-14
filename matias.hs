@@ -51,3 +51,35 @@ casosShowPiezaPosicionada = showPiezaPosicionadaCaso1:[]
 todoBienShowPiezaPosicionada = and casosShowPiezaPosicionada
 
 probarShowBoard1 = showBoard (ShogiGame (Just Sente) [(Peon, (Coordenada 2 3), Sente), (Peon, (Coordenada 0 0), Sente)])
+
+
+-------------------ACTIONS
+
+movimientosPosiblesPeon :: (Pieza, Coordenada, ShogiPlayer) -> [[Coordenada]]
+movimientosPosiblesPeon (a, (Coordenada x y), Sente) = if y==9 then [[]] else [[(Coordenada x (y+1))]]
+movimientosPosiblesPeon (a, (Coordenada x y), Gote) = if y==1 then [[]] else [[(Coordenada x (y-1))]]
+
+caso1MovimientosPosiblesPeon = (movimientosPosiblesPeon (Peon, (Coordenada 1 1), Sente)) == [[(Coordenada 1 2)]]
+caso2MovimientosPosiblesPeon = (movimientosPosiblesPeon (Peon, (Coordenada 1 9), Gote)) == [[(Coordenada 1 8)]]
+caso3MovimientosPosiblesPeon = (movimientosPosiblesPeon (Peon, (Coordenada 1 9), Sente)) == [[]]
+caso4MovimientosPosiblesPeon = (movimientosPosiblesPeon (Peon, (Coordenada 1 1), Gote)) == [[]]
+
+casosMovimientosPosiblesPeon = caso1MovimientosPosiblesPeon:caso2MovimientosPosiblesPeon:caso3MovimientosPosiblesPeon:caso4MovimientosPosiblesPeon:[]
+
+todoBienMovimientosPosiblesPeon = and casosMovimientosPosiblesPeon
+
+
+puedePromover :: ShogiAction -> Pieza -> ShogiPlayer -> Bool
+puedePromover _ Rey _ = False
+puedePromover _ GeneralDorado _ = False
+puedePromover (Movimiento (Coordenada x y) (Coordenada w z) a) _ Sente = z>=7
+puedePromover (Movimiento (Coordenada x y) (Coordenada w z) a) _ Gote = z<=3
+
+puedePromoverCaso1 = (puedePromover (Movimiento (Coordenada 1 1) (Coordenada 2 8) True) Peon Sente)==True
+
+casospuedePromover = puedePromoverCaso1:[]
+
+todoBienpuedePromover = and casospuedePromover
+
+
+-----
