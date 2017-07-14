@@ -63,7 +63,6 @@ actions game@(ShogiGame (Just activo) listaFichas) player
   | otherwise = []
   where actionsFichasEnTablero = foldl1 (++) [(if duenio==player then (actionsDeUnaPieza ficha game) else []) | ficha@(pieza,coord,duenio) <- listaFichas]
 
-
 actionsDeLaMano::ShogiGame -> ShogiPlayer -> [ShogiAction]
 actionsDeLaMano game@(ShogiGame activo listaFichas) player = foldl1 (++) (map (\ficha@(pieza,coord,duenio) -> if (duenio==player)&&(coord==(Coordenada 0 0)) then (map (\coordLibre -> (Arrojar pieza coordLibre)) (coordsLibresParaPlayer game player)) else []) listaFichas)
 
@@ -95,8 +94,10 @@ caso4actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (Sho
 caso5actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 7), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 7), Sente)])) == [(Movimiento (Coordenada 1 7) (Coordenada 1 8) False), (Movimiento (Coordenada 1 7) (Coordenada 1 8) True)]
 caso6actionsDeUnaPieza = (actionsDeUnaPieza (Lancero, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Lancero, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 4), Sente)])) == [(Movimiento (Coordenada 1 1) (Coordenada 1 2) False), (Movimiento (Coordenada 1 1) (Coordenada 1 3) False)]
 caso7actionsDeUnaPieza = (actionsDeUnaPieza (Lancero, (Coordenada 1 5), Sente) (ShogiGame (Just Sente) [(Lancero, (Coordenada 1 5), Sente),(Peon, (Coordenada 1 8), Sente)])) == [(Movimiento (Coordenada 1 5) (Coordenada 1 6) False), (Movimiento (Coordenada 1 5) (Coordenada 1 7) False), (Movimiento (Coordenada 1 5) (Coordenada 1 7) True)]
+caso8actionsDeUnaPieza = (actionsDeUnaPieza (Torre, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Torre, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 3), Sente),(Peon, (Coordenada 3 1), Sente)])) == [(Movimiento (Coordenada 1 1) (Coordenada 1 2) False),(Movimiento (Coordenada 1 1) (Coordenada 2 1) False)]
+caso9ActionsDeUnaPieza = (actionsDeUnaPieza (Torre, (Coordenada 8 2), Sente) beginning)
 
-casosactionsDeUnaPieza = caso1actionsDeUnaPieza:caso2actionsDeUnaPieza:caso3actionsDeUnaPieza:caso4actionsDeUnaPieza:caso5actionsDeUnaPieza:caso6actionsDeUnaPieza:caso7actionsDeUnaPieza:[]
+casosactionsDeUnaPieza = caso1actionsDeUnaPieza:caso2actionsDeUnaPieza:caso3actionsDeUnaPieza:caso4actionsDeUnaPieza:caso5actionsDeUnaPieza:caso6actionsDeUnaPieza:caso7actionsDeUnaPieza:caso8actionsDeUnaPieza:[]
 
 todoBienactionsDeUnaPieza = and casosactionsDeUnaPieza
 
@@ -119,6 +120,7 @@ todoBienfiltrarRecorridoEnUnaDireccion = and casosfiltrarRecorridoEnUnaDireccion
 obtenerFuncionMovimientoDePieza :: Pieza -> ((Pieza,Coordenada,ShogiPlayer) -> [[Coordenada]])
 obtenerFuncionMovimientoDePieza Peon = movimientosPosiblesPeon
 obtenerFuncionMovimientoDePieza Lancero = movimientosPosiblesLancero
+obtenerFuncionMovimientoDePieza Torre = movimientosPosiblesTorre
 
 
 

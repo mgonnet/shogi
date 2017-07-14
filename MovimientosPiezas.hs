@@ -18,6 +18,12 @@ movimientosPosiblesLancero :: (Pieza, Coordenada, ShogiPlayer) -> [[Coordenada]]
 movimientosPosiblesLancero (pieza, (Coordenada columna fila), Sente) = if (fila==9) then [[]] else [[(Coordenada columna fila)| fila <-[(fila+1)..9]]]
 movimientosPosiblesLancero (pieza, (Coordenada columna fila), Gote) = if (fila==1) then [[]] else [[(Coordenada columna fila)| fila <- ([(fila-1),(fila-2)..1])]]
 
+movimientosPosiblesTorre::(Pieza, Coordenada, ShogiPlayer) -> [[Coordenada]]
+movimientosPosiblesTorre (pieza, (Coordenada columna fila), _) = [[(Coordenada columna fila)| fila <- [(fila+1)..9]]]
+                                                                 ++[[(Coordenada columna fila)| fila <- ([(fila-1),(fila-2)..1])]]
+                                                                 ++[[(Coordenada columna fila)| columna <- [(columna+1)..9]]]
+                                                                 ++[[(Coordenada columna fila)| columna <- ([(columna-1),(columna-2)..1])]]                        
+
 esMovimientoPosibleGeneralDorado :: (Pieza, Coordenada, ShogiPlayer) -> [[Coordenada]]
 esMovimientoPosibleGeneralDorado (p, (Coordenada x y), player) 
  |(player == Sente) && (y==9) && (x/=1) && (x/=9) = [[(Coordenada (x+1) y)],[(Coordenada (x-1) y)],[(Coordenada x (y-1))]]
