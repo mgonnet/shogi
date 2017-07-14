@@ -64,9 +64,9 @@ caso2actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (Sho
 caso3actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 2), Sente)]))== [[]]
 caso4actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 2), Gote)]))== [[(Coordenada 1 2)]]
 
---casosactionsDeUnaPieza = caso1actionsDeUnaPieza:caso2actionsDeUnaPieza:caso3actionsDeUnaPieza:caso4actionsDeUnaPieza:[]
+casosactionsDeUnaPieza = caso1actionsDeUnaPieza:caso2actionsDeUnaPieza:caso3actionsDeUnaPieza:caso4actionsDeUnaPieza:[]
 
---todoBienactionsDeUnaPieza = and casosactionsDeUnaPieza
+todoBienactionsDeUnaPieza = and casosactionsDeUnaPieza
 
 filtrarRecorridoEnUnaDireccion:: ShogiGame -> [Coordenada] -> [Coordenada]
 filtrarRecorridoEnUnaDireccion _ [] = []
