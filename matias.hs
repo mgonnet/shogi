@@ -57,16 +57,20 @@ probarShowBoard1 = showBoard (ShogiGame (Just Sente) [(Peon, (Coordenada 2 3), S
 -------------------ACTIONS
 
 actionsDeUnaPieza :: (Pieza,Coordenada,ShogiPlayer) -> ShogiGame -> [ShogiAction]
-actionsDeUnaPieza tripleta@(pieza,coordenada,player) game@(ShogiGame jugador listaFichas) = map (\coord -> (Movimiento coordenada coord False)) coordenadasFiltradas
-  where coordenadasFiltradas = foldl1 (++) coordenasPorDireccionFiltradas
+actionsDeUnaPieza tripleta@(pieza,coordenada,player) game@(ShogiGame jugador listaFichas) = shogiActionsSinPromover ++ shogiActionsPromovidas
+  where shogiActionsPromovidas = (map (\(Movimiento posA posB promover) -> (Movimiento posA posB (not promover))) shogiActionsPromovibles)
+        shogiActionsPromovibles = (filter (\action -> (puedePromover action pieza player)) shogiActionsSinPromover)
+        shogiActionsSinPromover = map (\coord -> (Movimiento coordenada coord False)) coordenadasFiltradas
+        coordenadasFiltradas = foldl1 (++) coordenasPorDireccionFiltradas
         coordenasPorDireccionFiltradas = map (\coords -> (filtrarRecorridoEnUnaDireccion game coords)) ((obtenerFuncionMovimientoDePieza pieza) (tripleta))
 
 caso1actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente)])) == [(Movimiento (Coordenada 1 1) (Coordenada 1 2) False)]
 caso2actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 3), Gote)]))== [(Movimiento (Coordenada 1 1) (Coordenada 1 2) False)]
 caso3actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 2), Sente)]))== []
 caso4actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 1), Sente),(Peon, (Coordenada 1 2), Gote)]))== [(Movimiento (Coordenada 1 1) (Coordenada 1 2) False)]
+caso5actionsDeUnaPieza = (actionsDeUnaPieza (Peon, (Coordenada 1 7), Sente) (ShogiGame (Just Sente) [(Peon, (Coordenada 1 7), Sente)])) == [(Movimiento (Coordenada 1 7) (Coordenada 1 8) False), (Movimiento (Coordenada 1 7) (Coordenada 1 8) True)]
 
-casosactionsDeUnaPieza = caso1actionsDeUnaPieza:caso2actionsDeUnaPieza:caso3actionsDeUnaPieza:caso4actionsDeUnaPieza:[]
+casosactionsDeUnaPieza = caso1actionsDeUnaPieza:caso2actionsDeUnaPieza:caso3actionsDeUnaPieza:caso4actionsDeUnaPieza:caso5actionsDeUnaPieza:[]
 
 todoBienactionsDeUnaPieza = and casosactionsDeUnaPieza
 
@@ -94,8 +98,8 @@ obtenerFuncionMovimientoDePieza Peon = movimientosPosiblesPeon
 puedePromover :: ShogiAction -> Pieza -> ShogiPlayer -> Bool
 puedePromover _ Rey _ = False
 puedePromover _ GeneralDorado _ = False
-puedePromover (Movimiento (Coordenada x y) (Coordenada w z) a) _ Sente = z>=7
-puedePromover (Movimiento (Coordenada x y) (Coordenada w z) a) _ Gote = z<=3
+puedePromover (Movimiento (Coordenada x y) (Coordenada w z) _) _ Sente = z>=7
+puedePromover (Movimiento (Coordenada x y) (Coordenada w z) _) _ Gote = z<=3
 
 puedePromoverCaso1 = (puedePromover (Movimiento (Coordenada 1 1) (Coordenada 2 8) True) Peon Sente)==True
 

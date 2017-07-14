@@ -14,9 +14,9 @@ casosMovimientosPosiblesPeon = caso1MovimientosPosiblesPeon:caso2MovimientosPosi
 
 todoBienMovimientosPosiblesPeon = and casosMovimientosPosiblesPeon
 
-movimientoSPosiblesLancero :: (Pieza, Coordenada, ShogiPlayer) -> [[Coordenada]]
-movimientoSPosiblesLancero (pieza, (Coordenada columna fila), Sente) = if (fila==9) then [[]] else [[(Coordenada columna fila)| fila <-[(fila+1)..9]]]
-movimientoSPosiblesLancero (pieza, (Coordenada columna fila), Gote) = if (fila==1) then [[]] else [[(Coordenada columna fila)| fila <- ([(fila-1),(fila-2)..1])]]
+movimientosPosiblesLancero :: (Pieza, Coordenada, ShogiPlayer) -> [[Coordenada]]
+movimientosPosiblesLancero (pieza, (Coordenada columna fila), Sente) = if (fila==9) then [[]] else [[(Coordenada columna fila)| fila <-[(fila+1)..9]]]
+movimientosPosiblesLancero (pieza, (Coordenada columna fila), Gote) = if (fila==1) then [[]] else [[(Coordenada columna fila)| fila <- ([(fila-1),(fila-2)..1])]]
 
 esMovimientoPosibleGeneralDorado :: (Pieza, Coordenada, ShogiPlayer) -> [Coordenada]
 esMovimientoPosibleGeneralDorado (p, (Coordenada x y), player) 
@@ -64,6 +64,8 @@ casosesMovimientoPosibleCaballo = caso1esMovimientoPosibleCaballo:[]
 todoBienesMovimientoPosibleCaballo = and casosesMovimientoPosibleCaballo
 
 
+
+
 esMovimientoPosibleRey :: (Pieza, Coordenada, ShogiPlayer) -> [Coordenada]
 esMovimientoPosibleRey (p, (Coordenada x y), player) 
  |(y==9) && (x/=1) && (x/=9) = [(Coordenada x (y-1))]++[(Coordenada (x+1) (y-1))]++[(Coordenada (x-1) (y-1))]++[(Coordenada (x+1) y)]++[(Coordenada (x-1) y)]
@@ -109,3 +111,15 @@ caso1esMovimientoPosibleGeneralPlateado = (esMovimientoPosibleGeneralPlateado (G
 casosesMovimientoPosibleGeneralPlateado = caso1esMovimientoPosibleGeneralPlateado:[]
 
 todoBienesMovimientoPosibleGeneralPlateado = and casosesMovimientoPosibleGeneralPlateado
+
+esMovimientoPosibleAlfil :: (Pieza, Coordenada, ShogiPlayer) -> [Coordenada]
+esMovimientoPosibleAlfil (Alfil, (Coordenada a b), player) = filter (\(Coordenada x y) -> x>0 && x<10 && y>0 && y<10 && (x,y)/=(a,b)) [(Coordenada (a+x) (b+x)) | x<-[-8..8]]
+
+esMovimientoPosibleAlfil2 :: (Pieza, Coordenada, ShogiPlayer) -> [Coordenada]
+esMovimientoPosibleAlfil2 (Alfil2, (Coordenada a b), player) = filter (\(Coordenada x y) -> x>0 && x<10 && y>0 && y<10 && (x,y)/=(a,b)) ([(Coordenada (a+x) (b+x)) | x<-[-8..8]]++[(Coordenada (a+1) b),(Coordenada a (b-1)),(Coordenada a (b+1)),(Coordenada (a-1) b)])
+
+esMovimientoPosibleTorre :: (Pieza, Coordenada, ShogiPlayer) -> [Coordenada]
+esMovimientoPosibleTorre (Torre, (Coordenada a b), player) = filter (\(Coordenada x y) -> x>0 && x<10 && y>0 && y<10 && (x,y)/=(a,b)) ([(Coordenada (a+x) b) | x<-[-8..8]]++[(Coordenada a (b+x)) | x<-[-8..8]]) 
+
+esMovimientoPosibleTorre2 :: (Pieza, Coordenada, ShogiPlayer) -> [Coordenada]
+esMovimientoPosibleTorre2 (Torre2, (Coordenada a b), player) = filter (\(Coordenada x y) -> x>0 && x<10 && y>0 && y<10 && (x,y)/=(a,b)) (([(Coordenada (a+x) b) | x <-[-8..8]]++[(Coordenada a (b+x)) | x<-[-8..8]])++[(Coordenada (a+1) (b+1)),(Coordenada (a-1) (b+1)),(Coordenada (a-1) (b-1)),(Coordenada (a+1) (b-1))])
