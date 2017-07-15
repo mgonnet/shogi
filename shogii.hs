@@ -21,7 +21,7 @@ cambiarJugador Sente = Gote
 cambiarJugador Gote = Sente
 
 beginning :: ShogiGame
-beginning = ShogiGame (Just Sente) (peones++lanceros++torres++generalesDorados++caballos++reyes++generalesPlateados++caballos++alfiles)
+beginning = ShogiGame (Just Sente) (peones++lanceros++torres++generalesDorados++reyes++generalesPlateados++caballos++alfiles)
 
 peones :: [(Pieza,Coordenada,ShogiPlayer)]
 peones = [ (Peon, (Coordenada x 3), Sente) |  x <- [1..9]]++[ (Peon, (Coordenada x 7), Gote) |  x <- [1..9]]
@@ -58,3 +58,5 @@ casosGetCoordenada = getCoordenadaCaso1:getCoordenadaCaso2:[]
 
 todoBienGetCoordenada = and casosGetCoordenada
 ----------------------
+
+

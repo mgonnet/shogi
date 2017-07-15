@@ -21,7 +21,7 @@ todoBienIsFinishe = and casosIsFinished
 
 
 activePlayer :: ShogiGame -> Maybe ShogiPlayer
-activePlayer (ShogiGame a _) = a 
+activePlayer game@(ShogiGame player _)  = if (isFinished game) then Nothing else player
 
 ----------- Lo nuevo de nextState----------
 
@@ -86,8 +86,8 @@ todoBien = and (casosNextState++casosIsFinished)
 
 readAction :: String -> ShogiAction
 readAction x
-  |length(x) == 22 = (Movimiento (auxStringCoord (take 3 (drop 6 x))) (auxStringCoord (take 3 (drop 6 x))) True)
-  |length(x) == 24 = (Movimiento (auxStringCoord (take 3 (drop 10 x))) (auxStringCoord (take 3 (drop 10 x))) False)
+  |length(x) == 22 = (Movimiento (auxStringCoord (take 3 (drop 6 x))) (auxStringCoord (take 3 (drop 10 x))) True)
+  |length(x) == 24 = (Movimiento (auxStringCoord (take 3 (drop 6 x))) (auxStringCoord (take 3 (drop 10 x))) False)
   |length(x) == 13 = (Arrojar (auxStringPieza((drop 8 x)!!0)) (auxStringCoord(take 3(drop 10 x))))
   |otherwise = error "Accion incorrecta"
 
@@ -110,7 +110,7 @@ auxStringPieza x
 
 score :: ShogiGame -> ShogiPlayer -> Maybe Int
 score (ShogiGame (Just a) b) p
-  |((isFinished(ShogiGame (Just a) b)) && (a == p)) = Just 1
-  |((isFinished(ShogiGame (Just a) b)) && (a /= p)) = Just (-1)
+  |((isFinished(ShogiGame (Just a) b)) && (a == p)) = Just (-1)
+  |((isFinished(ShogiGame (Just a) b)) && (a /= p)) = Just 1
   |otherwise = Nothing
 score _ _ = Nothing

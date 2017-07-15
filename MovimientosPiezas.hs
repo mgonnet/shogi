@@ -173,17 +173,21 @@ movimientosPosiblesAlfil2 :: (Pieza, Coordenada, ShogiPlayer) -> [[Coordenada]]
 movimientosPosiblesAlfil2 (a, (Coordenada x y), c) = [(movimientoNorEste x y),(movimientoNorOeste x y), (movimientoSudEste x y), (movimientoSudOeste x y)]++(ortogonalesAlfil2 (a, (Coordenada x y), c))
 
 
+movimientosPosiblesAlfil :: (Pieza, Coordenada, ShogiPlayer) -> [[Coordenada]]
+movimientosPosiblesAlfil (a, (Coordenada x y), c) = [(movimientoNorEste x y),(movimientoNorOeste x y), (movimientoSudEste x y), (movimientoSudOeste x y)]
+
+
 movimientoNorEste :: Int -> Int -> [Coordenada]
-movimientoNorEste columna fila = if((fila == 9) || (columna == 9)) then [] else (listaTuplasAListaCoordenadas (zip [x | x <-[(columna+1)..9]] [y | y <- [(fila+1)..9]]))
+movimientoNorEste columna fila = if((fila == 9) || (columna == 9)) then [] else (listaTuplasAListaCoordenadas (zip [x | x <-[(columna+1)..9]] [y | y <- [(fila-1),(fila-2)..1]]))
 
 movimientoNorOeste :: Int -> Int -> [Coordenada]
-movimientoNorOeste columna fila = if((fila == 9) || (columna == 1)) then [] else (listaTuplasAListaCoordenadas (zip [x | x <-[(columna-1),(columna-2)..1]] [y | y <- [(fila+1)..9]]))
+movimientoNorOeste columna fila = if((fila == 9) || (columna == 1)) then [] else (listaTuplasAListaCoordenadas (zip [x | x <-[(columna-1),(columna-2)..1]] [y | y <- [(fila-1),(fila-2)..1]]))
 
 movimientoSudEste :: Int -> Int -> [Coordenada]
-movimientoSudEste columna fila = if((fila == 1) || (columna == 9)) then [] else (listaTuplasAListaCoordenadas (zip [x | x <-[(columna+1)..9]] [y | y <- [(fila-1),(fila-2)..1]]))
+movimientoSudEste columna fila = if((fila == 1) || (columna == 9)) then [] else (listaTuplasAListaCoordenadas (zip [x | x <-[(columna+1)..9]] [y | y <- [(fila+1)..9]]))
 
 movimientoSudOeste :: Int -> Int -> [Coordenada]
-movimientoSudOeste columna fila = if((fila == 1) || (columna == 1)) then [] else (listaTuplasAListaCoordenadas (zip [x | x <-[(columna-1),(columna-2)..1]] [y | y <- [(fila-1),(fila-2)..1]]))
+movimientoSudOeste columna fila = if((fila == 1) || (columna == 1)) then [] else (listaTuplasAListaCoordenadas (zip [x | x <-[(columna-1),(columna-2)..1]] [y | y <- [(fila+1)..9]]))
 
 listaTuplasAListaCoordenadas :: [(Int, Int)] -> [Coordenada]
 listaTuplasAListaCoordenadas [] = []

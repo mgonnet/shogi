@@ -1,3 +1,4 @@
+module Matias where
 import Shogii
 import MovimientosPiezas
 import NextState
@@ -60,7 +61,7 @@ probarShowBoard1 = showBoard (ShogiGame (Just Sente) [(Peon, (Coordenada 2 3), S
 
 actions:: ShogiGame -> ShogiPlayer -> [ShogiAction]
 actions game@(ShogiGame (Just activo) listaFichas) player
-  | activo == player = actionsFichasEnTablero ++ (actionsDeLaMano game player)
+  | activo == player = if (isFinished game) then [] else (actionsFichasEnTablero ++ (actionsDeLaMano game player))
   | otherwise = []
   where actionsFichasEnTablero = foldl1 (++) [(if duenio==player then (actionsDeUnaPieza ficha game) else []) | ficha@(pieza,coord,duenio) <- listaFichas]
 
@@ -132,9 +133,10 @@ obtenerFuncionMovimientoDePieza GeneralDorado = esMovimientoPosibleGeneralDorado
 obtenerFuncionMovimientoDePieza Caballo = esMovimientoPosibleCaballo
 obtenerFuncionMovimientoDePieza Rey = esMovimientoPosibleRey
 obtenerFuncionMovimientoDePieza GeneralPlateado = esMovimientoPosibleGeneralPlateado
+obtenerFuncionMovimientoDePieza Alfil = movimientosPosiblesAlfil
 obtenerFuncionMovimientoDePieza Torre2 = esMovimientoPosibleTorre2
 obtenerFuncionMovimientoDePieza Peon2 = esMovimientoPosiblePeon2
-obtenerFuncionMovimientoDePieza Alfil2 = ortogonalesAlfil2
+obtenerFuncionMovimientoDePieza Alfil2 = movimientosPosiblesAlfil2
 obtenerFuncionMovimientoDePieza Caballo2 = esMovimientoPosibleCaballo2
 obtenerFuncionMovimientoDePieza GeneralPlateado2 = esMovimientoPosibleGeneralPlateado2
 obtenerFuncionMovimientoDePieza Lancero2 = esMovimientoPosibleLancero2
@@ -153,7 +155,5 @@ puedePromoverCaso1 = (puedePromover (Movimiento (Coordenada 1 1) (Coordenada 2 8
 casospuedePromover = puedePromoverCaso1:[]
 
 todoBienpuedePromover = and casospuedePromover
-
-
 
 -----
