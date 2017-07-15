@@ -32,7 +32,8 @@ todoBienshowAction = and casosshowAction
 -----------------------------
 
 showBoard :: ShogiGame -> String
-showBoard (ShogiGame a listaFichas) = (foldl1 (\a b -> a++b) [(if x==0 then "\n" else (showPiezaPosicionada (getCoordenada (Coordenada x y) listaFichas))) | y <- [1..9], x <- [9,8,7,6,5,4,3,2,1,0] ]) ++ "\n" ++ "Jugador Activo: " ++ (showMaybePlayer a) ++ "\n"
+showBoard (ShogiGame a listaFichas) = tablero
+  where tablero = (foldl1 (\a b -> a++b) [(if x==0 then "\n" else (showPiezaPosicionada (getCoordenada (Coordenada x y) listaFichas))) | y <- [1..9], x <- [9,8,7,6,5,4,3,2,1,0] ]) ++ "\n" ++ "Jugador Activo: " ++ (showMaybePlayer a) ++ "\n"
 
 showMaybePlayer :: Maybe ShogiPlayer -> String
 showMaybePlayer Nothing = "Ninguno"
@@ -130,9 +131,13 @@ obtenerFuncionMovimientoDePieza Torre = movimientosPosiblesTorre
 obtenerFuncionMovimientoDePieza GeneralDorado = esMovimientoPosibleGeneralDorado
 obtenerFuncionMovimientoDePieza Caballo = esMovimientoPosibleCaballo
 obtenerFuncionMovimientoDePieza Rey = esMovimientoPosibleRey
-obtenerFuncionMovimientoDePieza GeneralPlatada = esMovimientoPosibleGeneralPlateado
-
-
+obtenerFuncionMovimientoDePieza GeneralPlateado = esMovimientoPosibleGeneralPlateado
+obtenerFuncionMovimientoDePieza Torre2 = esMovimientoPosibleTorre2
+obtenerFuncionMovimientoDePieza Peon2 = esMovimientoPosiblePeon2
+obtenerFuncionMovimientoDePieza Alfil2 = ortogonalesAlfil2
+obtenerFuncionMovimientoDePieza Caballo2 = esMovimientoPosibleCaballo2
+obtenerFuncionMovimientoDePieza GeneralPlateado2 = esMovimientoPosibleGeneralPlateado2
+obtenerFuncionMovimientoDePieza Lancero2 = esMovimientoPosibleLancero2
 
 puedePromover :: ShogiAction -> Pieza -> ShogiPlayer -> Bool
 puedePromover _ Rey _ = False

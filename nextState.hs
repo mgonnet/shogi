@@ -33,7 +33,6 @@ nextState x@(ShogiGame (Just a) _) y z =  if (a/=y) then error "El jugador no es
 
 
 nextStateValido:: ShogiGame -> ShogiPlayer -> ShogiAction -> ShogiGame
---nextStateValido a b (Movimiento cord1 cord2 promover) = caso de movimiento 
 nextStateValido (ShogiGame a listaDePiezas) juegadorQueMueve (Arrojar pieza coord1) = (ShogiGame (cambioJugadorActivo a) (map (\(x,y,z) -> if (((x==pieza) && (y==(Coordenada 0 0))) && (z==juegadorQueMueve)) then (x,coord1,juegadorQueMueve) else (x,y,z)) listaDePiezas) )
 nextStateValido (ShogiGame a listaDePiezas) juegadorQueMueve (Movimiento coord1 coord2 promover) = (ShogiGame (cambioJugadorActivo a) (map (\(x,y,z) -> if (y==coord1) then ((promoverPieza x promover), coord2, z) else (if (y==coord2) then (((quitarPromocionPieza x),(Coordenada 0 0), (cambiarJugador z))) else (x,y,z) )) listaDePiezas))
 
