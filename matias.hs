@@ -100,8 +100,10 @@ caso10ActionsDeUnaPieza = (actionsDeUnaPieza (GeneralDorado, (Coordenada 4 1), S
 caso11ActionsDeUnaPieza = (actionsDeUnaPieza (Caballo, (Coordenada 2 1), Sente) beginning)==[]
 caso12ActionsDeUnaPieza = (actionsDeUnaPieza (Caballo, (Coordenada 1 1), Sente) (ShogiGame (Just Sente) [(Caballo, (Coordenada 1 1), Sente)]))==[(Movimiento (Coordenada 1 1) (Coordenada 2 3) False)]
 caso13ActionsDeUnaPieza = (actionsDeUnaPieza (Caballo, (Coordenada 3 1), Sente) (ShogiGame (Just Sente) [(Caballo, (Coordenada 3 1), Sente)]))==[(Movimiento (Coordenada 3 1) (Coordenada 4 3) False), (Movimiento (Coordenada 3 1) (Coordenada 2 3) False)]
+caso14ActionsDeUnaPieza = (actionsDeUnaPieza (Rey, (Coordenada 5 1), Sente) beginning)==[Movimiento (Coordenada 5 1) (Coordenada 6 2) False,Movimiento (Coordenada 5 1) (Coordenada 5 2) False,Movimiento (Coordenada 5 1) (Coordenada 4 2) False]
+caso15ActionsDeUnaPieza = (actionsDeUnaPieza (Rey, (Coordenada 3 3), Sente) (ShogiGame (Just Sente) [(Caballo, (Coordenada 3 3), Sente)]))==[Movimiento (Coordenada 3 3) (Coordenada 3 2) False,Movimiento (Coordenada 3 3) (Coordenada 2 2) False,Movimiento (Coordenada 3 3) (Coordenada 2 3) False,Movimiento (Coordenada 3 3) (Coordenada 2 4) False,Movimiento (Coordenada 3 3) (Coordenada 3 4) False,Movimiento (Coordenada 3 3) (Coordenada 4 2) False,Movimiento (Coordenada 3 3) (Coordenada 4 3) False,Movimiento (Coordenada 3 3) (Coordenada 4 4) False]
 
-casosactionsDeUnaPieza = caso1actionsDeUnaPieza:caso2actionsDeUnaPieza:caso3actionsDeUnaPieza:caso4actionsDeUnaPieza:caso5actionsDeUnaPieza:caso6actionsDeUnaPieza:caso7actionsDeUnaPieza:caso8actionsDeUnaPieza:caso9ActionsDeUnaPieza:caso10ActionsDeUnaPieza:caso11ActionsDeUnaPieza:caso12ActionsDeUnaPieza:caso13ActionsDeUnaPieza:[]
+casosactionsDeUnaPieza = caso1actionsDeUnaPieza:caso2actionsDeUnaPieza:caso3actionsDeUnaPieza:caso4actionsDeUnaPieza:caso5actionsDeUnaPieza:caso6actionsDeUnaPieza:caso7actionsDeUnaPieza:caso8actionsDeUnaPieza:caso9ActionsDeUnaPieza:caso10ActionsDeUnaPieza:caso11ActionsDeUnaPieza:caso12ActionsDeUnaPieza:caso13ActionsDeUnaPieza:caso14ActionsDeUnaPieza:caso15ActionsDeUnaPieza:[]
 
 todoBienactionsDeUnaPieza = and casosactionsDeUnaPieza
 
@@ -128,6 +130,7 @@ obtenerFuncionMovimientoDePieza Torre = movimientosPosiblesTorre
 obtenerFuncionMovimientoDePieza GeneralDorado = esMovimientoPosibleGeneralDorado
 obtenerFuncionMovimientoDePieza Caballo = esMovimientoPosibleCaballo
 obtenerFuncionMovimientoDePieza Rey = esMovimientoPosibleRey
+obtenerFuncionMovimientoDePieza GeneralPlatada = esMovimientoPosibleGeneralPlateado
 
 
 
